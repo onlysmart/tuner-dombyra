@@ -231,7 +231,7 @@ packages:
   onlysmart_ui:
     dependency: "direct main"
     description:
-      path: "../../packages/onlysmart_ui"
+      path: "../../../packages/onlysmart_ui"
       relative: true
     source: path
     version: "0.0.1"

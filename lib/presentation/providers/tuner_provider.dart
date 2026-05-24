@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:tuner_guitar/services/audio_service.dart';
-import 'package:tuner_guitar/domain/models/app_settings.dart';
+import 'package:tuner_dombyra/services/audio_service.dart';
+import 'package:tuner_dombyra/domain/models/app_settings.dart';
 
 enum PitchAccuracy { inTune, sharp, flat, noInput }
 

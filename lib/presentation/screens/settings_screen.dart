@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:onlysmart_ui/onlysmart_ui.dart';
-import 'package:tuner_guitar/localization/app_localizations.dart';
-import 'package:tuner_guitar/presentation/providers/settings_provider.dart';
-import 'package:tuner_guitar/presentation/providers/tuner_provider.dart';
+import 'package:tuner_dombyra/localization/app_localizations.dart';
+import 'package:tuner_dombyra/presentation/providers/settings_provider.dart';
+import 'package:tuner_dombyra/presentation/providers/tuner_provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});

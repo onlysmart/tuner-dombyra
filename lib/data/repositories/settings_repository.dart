@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tuner_guitar/domain/models/app_settings.dart';
+import 'package:tuner_dombyra/domain/models/app_settings.dart';
 
 class SettingsRepository {
   final SharedPreferences _prefs;

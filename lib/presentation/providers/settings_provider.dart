@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tuner_guitar/data/repositories/settings_repository.dart';
-import 'package:tuner_guitar/domain/models/app_settings.dart';
+import 'package:tuner_dombyra/data/repositories/settings_repository.dart';
+import 'package:tuner_dombyra/domain/models/app_settings.dart';
 
 class SettingsProvider extends ChangeNotifier {
   final SettingsRepository _repository;

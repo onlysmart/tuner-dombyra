@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tuner_guitar/localization/app_localizations.dart';
-import 'package:tuner_guitar/presentation/providers/settings_provider.dart';
-import 'package:tuner_guitar/presentation/providers/tuner_provider.dart';
-import 'package:tuner_guitar/presentation/widgets/frequency_meter.dart';
-import 'package:tuner_guitar/presentation/widgets/note_display.dart';
-import 'package:tuner_guitar/presentation/widgets/tuning_headstock.dart';
-import 'package:tuner_guitar/presentation/screens/settings_screen.dart';
-import 'package:tuner_guitar/domain/models/app_settings.dart';
+import 'package:tuner_dombyra/localization/app_localizations.dart';
+import 'package:tuner_dombyra/presentation/providers/settings_provider.dart';
+import 'package:tuner_dombyra/presentation/providers/tuner_provider.dart';
+import 'package:tuner_dombyra/presentation/widgets/frequency_meter.dart';
+import 'package:tuner_dombyra/presentation/widgets/note_display.dart';
+import 'package:tuner_dombyra/presentation/widgets/tuning_headstock.dart';
+import 'package:tuner_dombyra/presentation/screens/settings_screen.dart';
+import 'package:tuner_dombyra/domain/models/app_settings.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
