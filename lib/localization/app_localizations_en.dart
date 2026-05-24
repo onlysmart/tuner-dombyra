@@ -3,7 +3,7 @@ import 'app_localizations.dart';
 class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
-  @override String get appName => 'Guitar Tuner';
+  @override String get appName => 'Dombyra Tuner';
   @override String get settings => 'Settings';
   @override String get appearance => 'Appearance';
   @override String get themeMode => 'Theme';
@@ -30,7 +30,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override String get hz => 'Hz';
   @override String targetHz(String hz) => 'Target: $hz Hz';
   @override String get microphonePermissionTitle => 'Microphone Access';
-  @override String get microphonePermissionMessage => 'Guitar Tuner needs microphone access.';
+  @override String get microphonePermissionMessage => 'Dombyra Tuner needs microphone access.';
   @override String get grant => 'Grant';
   @override String get deny => 'Deny';
   @override String get about => 'About';

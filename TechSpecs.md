@@ -1,8 +1,8 @@
-# 🎸 Guitar Tuner — Technical Specification
+# 🎸 Dombyra Tuner — Technical Specification
 
 ## 1. 🎯 Goal
 
-Create a guitar tuner app that uses the device's microphone to detect the pitch of guitar strings and help users tune their instrument. The app should follow the same UI/UX patterns as other OnlySmart apps.
+Create a dombyra tuner app that uses the device's microphone to detect the pitch of dombyra strings and help users tune their instrument. The app should follow the same UI/UX patterns as other OnlySmart apps.
 
 ---
 
@@ -12,14 +12,14 @@ Create a guitar tuner app that uses the device's microphone to detect the pitch 
 
 - **Microphone input** — Capture audio from device microphone
 - **Pitch detection** — Real-time detection of fundamental frequency (Hz)
-- **Standard tuning** — Support for 6-string guitar (E2, A2, D3, G3, B3, E4)
+- **Standard tuning** — Support for 6-string dombyra (E2, A2, D3, G3, B3, E4)
 - **Visual feedback** — Show whether the string is in tune, flat, or sharp
 - **String indicators** — Highlight which string is being played
 - **Frequency display** — Show detected Hz value
 
 ### 2.2 Tuning Modes
 
-- **Standard guitar** — E A D G B E
+- **Standard dombyra** — E A D G B E
 - **Drop D** — D A D G B E
 - **Half-step down** — Eb Ab Db Gb Bb Eb
 - **Full step down** — D G C F A D
@@ -157,7 +157,7 @@ lib/
 1. Capture audio buffer
 2. Apply FFT to get frequency spectrum
 3. Find dominant frequency using autocorrelation or YIN algorithm
-4. Map frequency to nearest note (E2-E4 for guitar)
+4. Map frequency to nearest note (E2-E4 for dombyra)
 5. Calculate cents deviation from target
 6. Update UI at 30Hz
 
@@ -210,7 +210,7 @@ lib/
 
 ## 6. 🎯 Success Criteria
 
-- App detects guitar string pitch within ±5 cents accuracy
+- App detects dombyra string pitch within ±5 cents accuracy
 - UI updates at 30Hz for smooth visual feedback
 - Works offline (all processing local)
 - Follows OnlySmart design language
@@ -222,6 +222,6 @@ lib/
 ## 7. 📦 Future Expansion (tuner-* family)
 
 - `tuner-ukulele` — 4-string ukulele tuner
-- `tuner-bass` — 4-string bass guitar tuner
+- `tuner-bass` — 4-string bass dombyra tuner
 - `tuner-violin` — Violin tuner
 - `tuner-chromatic` — Chromatic tuner for any instrument

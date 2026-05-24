@@ -1,4 +1,4 @@
-# tuner_guitar
+# tuner_dombyra
 
 A new Flutter project.
 

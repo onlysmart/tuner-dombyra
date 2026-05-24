@@ -25,16 +25,16 @@ void main() async {
   final settingsRepository = SettingsRepository(prefs);
 
   runApp(
-    TunerGuitarApp(
+    TunerDombyraApp(
       settingsRepository: settingsRepository,
     ),
   );
 }
 
-class TunerGuitarApp extends StatelessWidget {
+class TunerDombyraApp extends StatelessWidget {
   final SettingsRepository settingsRepository;
 
-  const TunerGuitarApp({
+  const TunerDombyraApp({
     super.key,
     required this.settingsRepository,
   });
@@ -54,7 +54,7 @@ class TunerGuitarApp extends StatelessWidget {
         builder: (context, settingsProvider, child) {
           final settings = settingsProvider.settings;
           return MaterialApp(
-            title: 'Guitar Tuner',
+            title: 'Dombyra Tuner',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
