@@ -1,0 +1,6 @@
+devtools_options:
+  description: "This file stores preferences for Dart analysis."
+  settings:
+    {
+      'background-rich-ansies': 'true',
+    }
