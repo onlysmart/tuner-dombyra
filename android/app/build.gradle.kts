@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "io.onlysmart.guitartuner"
+    namespace = "io.onlysmart.tuner.dombyra"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -23,7 +23,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "io.onlysmart.guitartuner"
+        applicationId = "io.onlysmart.tuner.dombyra"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
