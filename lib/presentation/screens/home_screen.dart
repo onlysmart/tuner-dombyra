@@ -157,9 +157,9 @@ class _HomeScreenState extends State<HomeScreen> {
             cents: tuner.centsDeviation,
           ),
         ),
-        const SizedBox(height: 12),
-        _buildTuningModeSelector(settings, tuner, l10n),
-        const SizedBox(height: 12),
+        // Dombyra typically only has one tuning mode, so we hide the selector
+        // _buildTuningModeSelector(settings, tuner, l10n),
+        const Spacer(),
       ],
     );
   }
@@ -210,8 +210,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 isActive: hasInput,
               ),
               const Spacer(),
-              _buildTuningModeSelector(settings, tuner, l10n),
-              const SizedBox(height: 12),
             ],
           ),
         ),
@@ -227,45 +225,5 @@ class _HomeScreenState extends State<HomeScreen> {
         const SizedBox(width: 16),
       ],
     );
-  }
-
-  Widget _buildTuningModeSelector(AppSettings settings, TunerProvider tuner, AppLocalizations l10n) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: TuningMode.values.map((mode) {
-          final isSelected = settings.tuningMode == mode;
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: ChoiceChip(
-              label: Text(_getModeLabel(mode, l10n)),
-              selected: isSelected,
-              onSelected: (_) {
-                context.read<SettingsProvider>().updateTuningMode(mode);
-                tuner.setTuningMode(
-                  mode: mode,
-                  noteNames: tuningNoteNames(mode),
-                );
-              },
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  String _getModeLabel(TuningMode mode, AppLocalizations l10n) {
-    switch (mode) {
-      case TuningMode.standard:
-        return l10n.standardTuning;
-      case TuningMode.dropD:
-        return l10n.dropD;
-      case TuningMode.halfStepDown:
-        return l10n.halfStepDown;
-      case TuningMode.fullStepDown:
-        return l10n.fullStepDown;
-    }
   }
 }

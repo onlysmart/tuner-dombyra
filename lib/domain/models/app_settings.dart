@@ -46,22 +46,15 @@ class AppSettings {
 
 enum TuningMode {
   standard,
-  dropD,
-  halfStepDown,
-  fullStepDown,
 }
 
 List<double> tuningFrequencies(TuningMode mode, double referencePitch) {
-  const standardSemitones = [-29, -24, -19, -14, -10, -5];
-  const dropDSemitones = [-31, -24, -19, -14, -10, -5];
-
-  final semitones = mode == TuningMode.dropD ? dropDSemitones : standardSemitones;
+  const standardSemitones = [-19, -14];
+  final semitones = standardSemitones;
   final baseRatio = referencePitch / 440.0;
 
   var result = semitones.map((s) {
     var freq = 440.0 * pow(2, s / 12) * baseRatio;
-    if (mode == TuningMode.halfStepDown) freq *= pow(2, -1 / 12);
-    if (mode == TuningMode.fullStepDown) freq *= pow(2, -2 / 12);
     return freq;
   }).toList();
 
@@ -69,27 +62,9 @@ List<double> tuningFrequencies(TuningMode mode, double referencePitch) {
 }
 
 List<String> tuningNoteNames(TuningMode mode) {
-  switch (mode) {
-    case TuningMode.standard:
-      return ['E', 'A', 'D', 'G', 'B', 'E'];
-    case TuningMode.dropD:
-      return ['D', 'A', 'D', 'G', 'B', 'E'];
-    case TuningMode.halfStepDown:
-      return ['Eb', 'Ab', 'Db', 'Gb', 'Bb', 'Eb'];
-    case TuningMode.fullStepDown:
-      return ['D', 'G', 'C', 'F', 'A', 'D'];
-  }
+  return ['D', 'G'];
 }
 
 List<int> tuningOctaves(TuningMode mode) {
-  switch (mode) {
-    case TuningMode.standard:
-      return [2, 2, 3, 3, 3, 4];
-    case TuningMode.dropD:
-      return [2, 2, 3, 3, 3, 4];
-    case TuningMode.halfStepDown:
-      return [2, 2, 3, 3, 3, 4];
-    case TuningMode.fullStepDown:
-      return [2, 2, 3, 3, 3, 4];
-  }
+  return [3, 3];
 }

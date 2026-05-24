@@ -76,159 +76,127 @@ class _HeadstockPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
 
-    // Headstock outline path
+    // Headstock outline path - thinner for dombyra
     final path = Path();
-    path.moveTo(size.width * 0.375, size.height);
-    path.lineTo(size.width * 0.375, size.height * 0.833);
+    path.moveTo(size.width * 0.4, size.height);
+    path.lineTo(size.width * 0.4, size.height * 0.833);
     path.quadraticBezierTo(
-      size.width * 0.375,
+      size.width * 0.4,
       size.height * 0.8,
-      size.width * 0.25,
+      size.width * 0.35,
       size.height * 0.7,
     );
-    path.lineTo(size.width * 0.3, size.height * 0.2);
+    path.lineTo(size.width * 0.4, size.height * 0.2);
     path.quadraticBezierTo(
-      size.width * 0.3,
+      size.width * 0.4,
       size.height * 0.1,
       size.width * 0.5,
       size.height * 0.133,
     );
     path.quadraticBezierTo(
-      size.width * 0.7,
+      size.width * 0.6,
       size.height * 0.1,
-      size.width * 0.7,
+      size.width * 0.6,
       size.height * 0.2,
     );
-    path.lineTo(size.width * 0.75, size.height * 0.7);
+    path.lineTo(size.width * 0.65, size.height * 0.7);
     path.quadraticBezierTo(
-      size.width * 0.625,
+      size.width * 0.6,
       size.height * 0.8,
-      size.width * 0.625,
+      size.width * 0.6,
       size.height * 0.833,
     );
-    path.lineTo(size.width * 0.625, size.height);
+    path.lineTo(size.width * 0.6, size.height);
 
     canvas.drawPath(path, strokePaint);
 
     // Horizontal lines inside headstock
     canvas.drawLine(
-      Offset(size.width * 0.375, size.height * 0.9),
-      Offset(size.width * 0.625, size.height * 0.9),
+      Offset(size.width * 0.4, size.height * 0.9),
+      Offset(size.width * 0.6, size.height * 0.9),
       strokePaint,
     );
     canvas.drawLine(
-      Offset(size.width * 0.375, size.height * 0.933),
-      Offset(size.width * 0.625, size.height * 0.933),
+      Offset(size.width * 0.4, size.height * 0.933),
+      Offset(size.width * 0.6, size.height * 0.933),
       strokePaint,
     );
 
     // String positions
-    final stringXLeft = [0.45, 0.4, 0.35]; // D, A, E low (left side)
-    final stringXRight = [0.55, 0.6, 0.65]; // G, B, E high (right side)
-    final pegY = [size.height * 0.25, size.height * 0.45, size.height * 0.65]; // 3 pegs per side
+    final stringXLeft = size.width * 0.45;
+    final stringXRight = size.width * 0.55;
+    final pegY = size.height * 0.45;
 
-    // Draw strings
-    for (int i = 0; i < 3; i++) {
-      final isActive = activeStringIndex == (2 - i); // Left side: 2,1,0
-      final paint = isActive ? activeStringPaint : stringPaint;
-
-      // String from nut (bottom) to peg
-      final startX = size.width * 0.5;
-      final endX = size.width * stringXLeft[i];
-      final y = pegY[i];
-
+    // Draw left string (index 0)
+    bool isLeftActive = activeStringIndex == 0;
+    canvas.drawLine(
+      Offset(size.width * 0.5, size.height),
+      Offset(stringXLeft, pegY),
+      isLeftActive ? activeStringPaint : stringPaint,
+    );
+    if (isLeftActive) {
+      final glowPaint = Paint()
+        ..color = const Color(0xFF1991D8).withValues(alpha: 0.3)
+        ..strokeWidth = 8
+        ..style = PaintingStyle.stroke
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
       canvas.drawLine(
-        Offset(startX, size.height),
-        Offset(endX, y),
-        paint,
+        Offset(size.width * 0.5, size.height),
+        Offset(stringXLeft, pegY),
+        glowPaint,
       );
-
-      // String glow effect for active
-      if (isActive) {
-        final glowPaint = Paint()
-          ..color = const Color(0xFF1991D8).withValues(alpha: 0.3)
-          ..strokeWidth = 8
-          ..style = PaintingStyle.stroke
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
-        canvas.drawLine(
-          Offset(startX, size.height),
-          Offset(endX, y),
-          glowPaint,
-        );
-      }
     }
 
-    for (int i = 0; i < 3; i++) {
-      final isActive = activeStringIndex == (3 + i); // Right side: 3,4,5
-      final paint = isActive ? activeStringPaint : stringPaint;
-
-      final startX = size.width * 0.5;
-      final endX = size.width * stringXRight[i];
-      final y = pegY[i];
-
+    // Draw right string (index 1)
+    bool isRightActive = activeStringIndex == 1;
+    canvas.drawLine(
+      Offset(size.width * 0.5, size.height),
+      Offset(stringXRight, pegY),
+      isRightActive ? activeStringPaint : stringPaint,
+    );
+    if (isRightActive) {
+      final glowPaint = Paint()
+        ..color = const Color(0xFF1991D8).withValues(alpha: 0.3)
+        ..strokeWidth = 8
+        ..style = PaintingStyle.stroke
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
       canvas.drawLine(
-        Offset(startX, size.height),
-        Offset(endX, y),
-        paint,
+        Offset(size.width * 0.5, size.height),
+        Offset(stringXRight, pegY),
+        glowPaint,
       );
-
-      if (isActive) {
-        final glowPaint = Paint()
-          ..color = const Color(0xFF1991D8).withValues(alpha: 0.3)
-          ..strokeWidth = 8
-          ..style = PaintingStyle.stroke
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
-        canvas.drawLine(
-          Offset(startX, size.height),
-          Offset(endX, y),
-          glowPaint,
-        );
-      }
     }
 
-    // Draw peg circles on headstock (small circles at string end)
-    for (int i = 0; i < 3; i++) {
-      final isActive = activeStringIndex == (2 - i);
-      final paint = isActive ? activePegPaint : pegStrokePaint;
-      final fillPaint = isActive
-          ? (Paint()..color = Colors.white)
-          : (Paint()..color = Colors.transparent);
+    // Draw peg circles on headstock
+    final leftCirclePaint = isLeftActive ? activePegPaint : pegStrokePaint;
+    final leftCircleFill = isLeftActive ? (Paint()..color = Colors.white) : (Paint()..color = Colors.transparent);
+    canvas.drawCircle(Offset(stringXLeft, pegY), 6, leftCircleFill);
+    canvas.drawCircle(Offset(stringXLeft, pegY), 6, leftCirclePaint);
+    canvas.drawCircle(Offset(stringXLeft, pegY), 2, leftCirclePaint);
 
-      final x = size.width * stringXLeft[i];
-      canvas.drawCircle(Offset(x, pegY[i]), 6, fillPaint);
-      canvas.drawCircle(Offset(x, pegY[i]), 6, paint);
-      canvas.drawCircle(Offset(x, pegY[i]), 2, paint);
+    final rightCirclePaint = isRightActive ? activePegPaint : pegStrokePaint;
+    final rightCircleFill = isRightActive ? (Paint()..color = Colors.white) : (Paint()..color = Colors.transparent);
+    canvas.drawCircle(Offset(stringXRight, pegY), 6, rightCircleFill);
+    canvas.drawCircle(Offset(stringXRight, pegY), 6, rightCirclePaint);
+    canvas.drawCircle(Offset(stringXRight, pegY), 2, rightCirclePaint);
 
-      final rightX = size.width * stringXRight[i];
-      final rightActive = activeStringIndex == (3 + i);
-      final rightPaint = rightActive ? activePegPaint : pegStrokePaint;
-      final rightFill = rightActive ? (Paint()..color = Colors.white) : (Paint()..color = Colors.transparent);
-      canvas.drawCircle(Offset(rightX, pegY[i]), 6, rightFill);
-      canvas.drawCircle(Offset(rightX, pegY[i]), 6, rightPaint);
-      canvas.drawCircle(Offset(rightX, pegY[i]), 2, rightPaint);
-    }
-
-    // Peg connectors (lines from circle to edge)
+    // Peg connectors
     final connectorPaint = Paint()
       ..color = baseColor.withValues(alpha: 0.6)
       ..strokeWidth = 4
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
-    canvas.drawLine(Offset(size.width * 0.3 - 5, pegY[0]), Offset(size.width * 0.15, pegY[0]), connectorPaint);
-    canvas.drawLine(Offset(size.width * 0.3 - 5, pegY[1]), Offset(size.width * 0.15, pegY[1]), connectorPaint);
-    canvas.drawLine(Offset(size.width * 0.3 - 5, pegY[2]), Offset(size.width * 0.15, pegY[2]), connectorPaint);
-    canvas.drawLine(Offset(size.width * 0.7 + 5, pegY[0]), Offset(size.width * 0.85, pegY[0]), connectorPaint);
-    canvas.drawLine(Offset(size.width * 0.7 + 5, pegY[1]), Offset(size.width * 0.85, pegY[1]), connectorPaint);
-    canvas.drawLine(Offset(size.width * 0.7 + 5, pegY[2]), Offset(size.width * 0.85, pegY[2]), connectorPaint);
+    canvas.drawLine(Offset(size.width * 0.4 - 5, pegY), Offset(size.width * 0.25, pegY), connectorPaint);
+    canvas.drawLine(Offset(size.width * 0.6 + 5, pegY), Offset(size.width * 0.75, pegY), connectorPaint);
 
-    // Peg shapes (rounded rectangles with note labels)
-    _drawPegShape(canvas, Offset(size.width * 0.1, pegY[0]), true, noteNames[2], textPainter, isActive: activeStringIndex == 2);
-    _drawPegShape(canvas, Offset(size.width * 0.1, pegY[1]), true, noteNames[1], textPainter, isActive: activeStringIndex == 1);
-    _drawPegShape(canvas, Offset(size.width * 0.1, pegY[2]), true, noteNames[0], textPainter, isActive: activeStringIndex == 0);
-    _drawPegShape(canvas, Offset(size.width * 0.9, pegY[0]), false, noteNames[3], textPainter, isActive: activeStringIndex == 3);
-    _drawPegShape(canvas, Offset(size.width * 0.9, pegY[1]), false, noteNames[4], textPainter, isActive: activeStringIndex == 4);
-    _drawPegShape(canvas, Offset(size.width * 0.9, pegY[2]), false, noteNames[5], textPainter, isActive: activeStringIndex == 5);
+    // Peg shapes
+    if (noteNames.isNotEmpty) {
+      _drawPegShape(canvas, Offset(size.width * 0.2, pegY), true, noteNames[0], textPainter, isActive: isLeftActive);
+    }
+    if (noteNames.length > 1) {
+      _drawPegShape(canvas, Offset(size.width * 0.8, pegY), false, noteNames[1], textPainter, isActive: isRightActive);
+    }
   }
 
   void _drawPegShape(Canvas canvas, Offset center, bool isLeft, String note, TextPainter textPainter, {bool isActive = false}) {
