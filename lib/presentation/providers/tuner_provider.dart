@@ -26,6 +26,10 @@ class TunerProvider extends ChangeNotifier {
   TuningMode _tuningMode = TuningMode.standard;
   bool _hapticEnabled = true;
 
+  double _smoothedFrequency = 0.0;
+  int _stringLockCandidate = -1;
+  int _stringLockCount = 0;
+
   double get detectedFrequency => _detectedFrequency;
   double get targetFrequency => _targetFrequency;
   int get detectedStringIndex => _detectedStringIndex;
@@ -81,6 +85,9 @@ class TunerProvider extends ChangeNotifier {
 
     _isListening = true;
     _inputState = AudioInputState.listening;
+    _smoothedFrequency = 0.0;
+    _stringLockCandidate = -1;
+    _stringLockCount = 0;
     _inTuneCount = 0;
     notifyListeners();
 
@@ -116,21 +123,59 @@ class TunerProvider extends ChangeNotifier {
       _computeTargets();
     }
 
+    const smoothingAlpha = 0.4;
+    if (_smoothedFrequency == 0.0) {
+      _smoothedFrequency = frequency;
+    } else {
+      _smoothedFrequency = smoothingAlpha * frequency + (1 - smoothingAlpha) * _smoothedFrequency;
+    }
+
     int nearestIndex = 0;
     double minDiff = double.infinity;
     for (int i = 0; i < _targetFrequencies.length; i++) {
-      final diff = (frequency - _targetFrequencies[i]).abs();
+      final diff = (_smoothedFrequency - _targetFrequencies[i]).abs();
       if (diff < minDiff) {
         minDiff = diff;
         nearestIndex = i;
       }
     }
 
-    _targetFrequency = _targetFrequencies[nearestIndex];
-    _detectedStringIndex = nearestIndex;
+    const hysteresisRatio = 0.7;
+    const stringSwitchDebounce = 3;
+
+    if (_detectedStringIndex == -1) {
+      _detectedStringIndex = nearestIndex;
+      _targetFrequency = _targetFrequencies[nearestIndex];
+      _stringLockCandidate = -1;
+      _stringLockCount = 0;
+    } else if (nearestIndex == _detectedStringIndex) {
+      _targetFrequency = _targetFrequencies[_detectedStringIndex];
+      _stringLockCandidate = -1;
+      _stringLockCount = 0;
+    } else {
+      final diffToCurrent = (_smoothedFrequency - _targetFrequencies[_detectedStringIndex]).abs();
+
+      if (minDiff < diffToCurrent * hysteresisRatio) {
+        if (_stringLockCandidate == nearestIndex) {
+          _stringLockCount++;
+          if (_stringLockCount >= stringSwitchDebounce) {
+            _detectedStringIndex = nearestIndex;
+            _targetFrequency = _targetFrequencies[nearestIndex];
+            _stringLockCandidate = -1;
+            _stringLockCount = 0;
+          }
+        } else {
+          _stringLockCandidate = nearestIndex;
+          _stringLockCount = 1;
+        }
+      } else {
+        _stringLockCandidate = -1;
+        _stringLockCount = 0;
+      }
+    }
 
     if (_targetFrequency > 0) {
-      _centsDeviation = 1200 * log(frequency / _targetFrequency) / log(2);
+      _centsDeviation = 1200 * log(_smoothedFrequency / _targetFrequency) / log(2);
       _centsDeviation = _centsDeviation.clamp(-50.0, 50.0);
 
       final inTuneThreshold = 5.0 + (1 - _sensitivity) * 5;
@@ -164,6 +209,8 @@ class TunerProvider extends ChangeNotifier {
     _inputState = AudioInputState.tooQuiet;
     _accuracy = PitchAccuracy.noInput;
     _detectedStringIndex = -1;
+    _stringLockCandidate = -1;
+    _stringLockCount = 0;
     _inTuneCount = 0;
     notifyListeners();
   }
@@ -178,6 +225,9 @@ class TunerProvider extends ChangeNotifier {
     _detectedFrequency = 0.0;
     _targetFrequency = 0.0;
     _detectedStringIndex = -1;
+    _smoothedFrequency = 0.0;
+    _stringLockCandidate = -1;
+    _stringLockCount = 0;
     _accuracy = PitchAccuracy.noInput;
     _centsDeviation = 0.0;
     _inTuneCount = 0;
