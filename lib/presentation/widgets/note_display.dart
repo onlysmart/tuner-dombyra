@@ -4,6 +4,7 @@ class NoteDisplay extends StatelessWidget {
   final String noteName;
   final String octave;
   final double frequency;
+  final double targetFrequency;
   final bool isActive;
 
   const NoteDisplay({
@@ -11,6 +12,7 @@ class NoteDisplay extends StatelessWidget {
     required this.noteName,
     required this.octave,
     required this.frequency,
+    required this.targetFrequency,
     this.isActive = false,
   });
 
@@ -49,15 +51,40 @@ class NoteDisplay extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        if (isActive && frequency > 0)
-          Text(
-            '${frequency.toStringAsFixed(2)} Hz',
-            style: TextStyle(
-              color: colorScheme.onSurfaceVariant,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 2.0,
-            ),
+        if (isActive && frequency > 0 && targetFrequency > 0)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '${frequency.toStringAsFixed(2)} Hz',
+                style: TextStyle(
+                  color: colorScheme.primary,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.0,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  '\u2192',
+                  style: TextStyle(
+                    color: colorScheme.onSurfaceVariant,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Text(
+                '${targetFrequency.toStringAsFixed(2)} Hz',
+                style: TextStyle(
+                  color: colorScheme.onSurfaceVariant,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.0,
+                ),
+              ),
+            ],
           )
         else
           const SizedBox(height: 10),

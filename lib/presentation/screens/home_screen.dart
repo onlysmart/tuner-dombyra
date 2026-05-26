@@ -145,6 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ? octaves[tuner.detectedStringIndex].toString()
               : '',
           frequency: tuner.detectedFrequency,
+          targetFrequency: tuner.targetFrequency,
           isActive: hasInput,
         ),
         const Spacer(),
@@ -207,6 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ? octaves[tuner.detectedStringIndex].toString()
                     : '',
                 frequency: tuner.detectedFrequency,
+                targetFrequency: tuner.targetFrequency,
                 isActive: hasInput,
               ),
               const Spacer(),
