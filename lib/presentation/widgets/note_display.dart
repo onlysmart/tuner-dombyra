@@ -22,20 +22,40 @@ class NoteDisplay extends StatelessWidget {
 
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              noteName,
+        // Line 1: target/etalon frequency (small, muted)
+        if (isActive && targetFrequency > 0)
+          SizedBox(
+            height: 14,
+            child: Text(
+              '${targetFrequency.toStringAsFixed(1)} Hz',
               style: TextStyle(
-                color: colorScheme.onSurface,
-                fontSize: 50,
-                fontWeight: FontWeight.w800,
+                color: colorScheme.onSurfaceVariant,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
                 height: 1.0,
               ),
             ),
-            if (noteName != '-')
+          )
+        else
+          const SizedBox(height: 14),
+
+        const SizedBox(height: 8),
+
+        // Line 2: note name or prompt (large)
+        if (isActive && noteName != '-')
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                noteName,
+                style: TextStyle(
+                  color: colorScheme.onSurface,
+                  fontSize: 50,
+                  fontWeight: FontWeight.w800,
+                  height: 1.0,
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 5.0),
                 child: Text(
@@ -48,46 +68,33 @@ class NoteDisplay extends StatelessWidget {
                   ),
                 ),
               ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        if (isActive && frequency > 0 && targetFrequency > 0)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '${frequency.toStringAsFixed(2)} Hz',
-                style: TextStyle(
-                  color: colorScheme.primary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1.0,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  '\u2192',
-                  style: TextStyle(
-                    color: colorScheme.onSurfaceVariant,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              Text(
-                '${targetFrequency.toStringAsFixed(2)} Hz',
-                style: TextStyle(
-                  color: colorScheme.onSurfaceVariant,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1.0,
-                ),
-              ),
             ],
           )
         else
-          const SizedBox(height: 10),
+          Text(
+            noteName,
+            style: TextStyle(
+              color: colorScheme.primary,
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              height: 1.0,
+            ),
+          ),
+
+        const SizedBox(height: 8),
+
+        // Line 3: current/detected frequency
+        Text(
+          '${frequency.toStringAsFixed(2)} Hz',
+          style: TextStyle(
+            color: isActive && frequency > 0
+                ? colorScheme.primary
+                : colorScheme.onSurfaceVariant,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1.0,
+          ),
+        ),
       ],
     );
   }

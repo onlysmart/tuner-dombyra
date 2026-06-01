@@ -138,9 +138,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 16),
         NoteDisplay(
-          noteName: tuner.detectedStringIndex >= 0
+          noteName: hasInput
               ? tuningNoteNames(tuningMode)[tuner.detectedStringIndex]
-              : '-',
+              : l10n.playString,
           octave: tuner.detectedStringIndex >= 0 && tuner.detectedStringIndex < octaves.length
               ? octaves[tuner.detectedStringIndex].toString()
               : '',
@@ -201,9 +201,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 12),
               NoteDisplay(
-                noteName: tuner.detectedStringIndex >= 0
+                noteName: hasInput
                     ? tuningNoteNames(tuningMode)[tuner.detectedStringIndex]
-                    : '-',
+                    : l10n.playString,
                 octave: tuner.detectedStringIndex >= 0 && tuner.detectedStringIndex < octaves.length
                     ? octaves[tuner.detectedStringIndex].toString()
                     : '',
