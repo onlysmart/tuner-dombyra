@@ -158,9 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
             cents: tuner.centsDeviation,
           ),
         ),
-        // Dombyra typically only has one tuning mode, so we hide the selector
-        // _buildTuningModeSelector(settings, tuner, l10n),
-        const Spacer(),
+        const SizedBox(height: 16),
       ],
     );
   }
@@ -215,13 +213,16 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        SizedBox(
-          width: 150,
-          height: 250,
-          child: TuningHeadstock(
-            noteNames: tuningNoteNames(tuningMode),
-            activeStringIndex: tuner.detectedStringIndex,
-            cents: tuner.centsDeviation,
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: SizedBox(
+            width: 150,
+            height: 250,
+            child: TuningHeadstock(
+              noteNames: tuningNoteNames(tuningMode),
+              activeStringIndex: tuner.detectedStringIndex,
+              cents: tuner.centsDeviation,
+            ),
           ),
         ),
         const SizedBox(width: 16),
