@@ -122,16 +122,20 @@ class _HeadstockPainter extends CustomPainter {
       strokePaint,
     );
 
-    // String positions
-    final stringXLeft = size.width * 0.45;
-    final stringXRight = size.width * 0.55;
-    final pegY = size.height * 0.45;
+    // String positions with vertical tilt
+    // String 0 (D): lower peg, string 1 (G): higher peg
+    final dPegX = size.width * 0.35;
+    final dPegY = size.height * 0.35;
+    final dNutX = size.width * 0.44;
+    final gPegX = size.width * 0.65;
+    final gPegY = size.height * 0.55;
+    final gNutX = size.width * 0.56;
 
-    // Draw left string (index 0)
+    // Draw string 0 (D)
     bool isLeftActive = activeStringIndex == 0;
     canvas.drawLine(
-      Offset(size.width * 0.5, size.height),
-      Offset(stringXLeft, pegY),
+      Offset(dNutX, size.height),
+      Offset(dPegX, dPegY),
       isLeftActive ? activeStringPaint : stringPaint,
     );
     if (isLeftActive) {
@@ -141,17 +145,17 @@ class _HeadstockPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
       canvas.drawLine(
-        Offset(size.width * 0.5, size.height),
-        Offset(stringXLeft, pegY),
+        Offset(dNutX, size.height),
+        Offset(dPegX, dPegY),
         glowPaint,
       );
     }
 
-    // Draw right string (index 1)
+    // Draw string 1 (G)
     bool isRightActive = activeStringIndex == 1;
     canvas.drawLine(
-      Offset(size.width * 0.5, size.height),
-      Offset(stringXRight, pegY),
+      Offset(gNutX, size.height),
+      Offset(gPegX, gPegY),
       isRightActive ? activeStringPaint : stringPaint,
     );
     if (isRightActive) {
@@ -161,8 +165,8 @@ class _HeadstockPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
       canvas.drawLine(
-        Offset(size.width * 0.5, size.height),
-        Offset(stringXRight, pegY),
+        Offset(gNutX, size.height),
+        Offset(gPegX, gPegY),
         glowPaint,
       );
     }
@@ -170,15 +174,15 @@ class _HeadstockPainter extends CustomPainter {
     // Draw peg circles on headstock
     final leftCirclePaint = isLeftActive ? activePegPaint : pegStrokePaint;
     final leftCircleFill = isLeftActive ? (Paint()..color = Colors.white) : (Paint()..color = Colors.transparent);
-    canvas.drawCircle(Offset(stringXLeft, pegY), 6, leftCircleFill);
-    canvas.drawCircle(Offset(stringXLeft, pegY), 6, leftCirclePaint);
-    canvas.drawCircle(Offset(stringXLeft, pegY), 2, leftCirclePaint);
+    canvas.drawCircle(Offset(dPegX, dPegY), 6, leftCircleFill);
+    canvas.drawCircle(Offset(dPegX, dPegY), 6, leftCirclePaint);
+    canvas.drawCircle(Offset(dPegX, dPegY), 2, leftCirclePaint);
 
     final rightCirclePaint = isRightActive ? activePegPaint : pegStrokePaint;
     final rightCircleFill = isRightActive ? (Paint()..color = Colors.white) : (Paint()..color = Colors.transparent);
-    canvas.drawCircle(Offset(stringXRight, pegY), 6, rightCircleFill);
-    canvas.drawCircle(Offset(stringXRight, pegY), 6, rightCirclePaint);
-    canvas.drawCircle(Offset(stringXRight, pegY), 2, rightCirclePaint);
+    canvas.drawCircle(Offset(gPegX, gPegY), 6, rightCircleFill);
+    canvas.drawCircle(Offset(gPegX, gPegY), 6, rightCirclePaint);
+    canvas.drawCircle(Offset(gPegX, gPegY), 2, rightCirclePaint);
 
     // Peg connectors
     final connectorPaint = Paint()
@@ -187,15 +191,15 @@ class _HeadstockPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
-    canvas.drawLine(Offset(size.width * 0.4 - 5, pegY), Offset(size.width * 0.25, pegY), connectorPaint);
-    canvas.drawLine(Offset(size.width * 0.6 + 5, pegY), Offset(size.width * 0.75, pegY), connectorPaint);
+    canvas.drawLine(Offset(size.width * 0.35 - 5, dPegY), Offset(size.width * 0.25, dPegY), connectorPaint);
+    canvas.drawLine(Offset(size.width * 0.65 + 5, gPegY), Offset(size.width * 0.75, gPegY), connectorPaint);
 
     // Peg shapes
     if (noteNames.isNotEmpty) {
-      _drawPegShape(canvas, Offset(size.width * 0.2, pegY), true, noteNames[0], textPainter, isActive: isLeftActive);
+      _drawPegShape(canvas, Offset(size.width * 0.2, dPegY), true, noteNames[0], textPainter, isActive: isLeftActive);
     }
     if (noteNames.length > 1) {
-      _drawPegShape(canvas, Offset(size.width * 0.8, pegY), false, noteNames[1], textPainter, isActive: isRightActive);
+      _drawPegShape(canvas, Offset(size.width * 0.8, gPegY), false, noteNames[1], textPainter, isActive: isRightActive);
     }
   }
 
