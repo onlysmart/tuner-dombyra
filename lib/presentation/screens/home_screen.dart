@@ -133,6 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: FrequencyMeter(
             cents: tuner.centsDeviation,
+            targetFrequency: tuner.targetFrequency,
             isActive: hasInput,
           ),
         ),
@@ -194,6 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: FrequencyMeter(
                   cents: tuner.centsDeviation,
+                  targetFrequency: tuner.targetFrequency,
                   isActive: hasInput,
                 ),
               ),
