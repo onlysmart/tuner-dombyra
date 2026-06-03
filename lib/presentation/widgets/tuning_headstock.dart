@@ -147,7 +147,7 @@ class _HeadstockPainter extends CustomPainter {
     // String positions with vertical tilt
     // String 0 (D): lower peg, string 1 (G): higher peg
     final dPegX = size.width * 0.45;
-    final dPegY = size.height * 0.4;
+    final dPegY = size.height * 0.25;
     final dNutX = size.width * 0.45;
     final gPegX = size.width * 0.55;
     final gPegY = size.height * 0.6;

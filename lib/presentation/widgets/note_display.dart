@@ -87,7 +87,7 @@ class NoteDisplay extends StatelessWidget {
           height: 20,
           child: Center(
             child: Text(
-              '${frequency.toStringAsFixed(2)} Hz',
+              '${(isActive ? frequency : 0.0).toStringAsFixed(2)} Hz',
               style: TextStyle(
                 color: isActive && frequency > 0
                     ? colorScheme.primary

@@ -37,6 +37,7 @@ class _FrequencyMeterState extends State<FrequencyMeter> {
 
     final targetFreq = widget.targetFrequency ?? 440.0;
     final showHz = widget.targetFrequency != null && widget.targetFrequency! > 0;
+    final effectiveCents = widget.isActive ? _displayedCents : 0.0;
 
     return SizedBox(
       height: 120,
@@ -94,19 +95,19 @@ class _FrequencyMeterState extends State<FrequencyMeter> {
           AnimatedAlign(
             duration: const Duration(milliseconds: 100),
             alignment: Alignment(
-              (_displayedCents.clamp(-200.0, 200.0) / 200.0),
+              (effectiveCents.clamp(-200.0, 200.0) / 200.0),
               -1.0,
             ),
-            child: _buildNeedle(colorScheme, targetFreq, showHz),
+            child: _buildNeedle(colorScheme, targetFreq, showHz, effectiveCents),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildNeedle(ColorScheme colorScheme, double targetFreq, bool showHz) {
-    final clampedCents = _displayedCents.clamp(-200.0, 200.0);
-    final needleColor = colorScheme.onSurface;
+  Widget _buildNeedle(ColorScheme colorScheme, double targetFreq, bool showHz, double effectiveCents) {
+    final clampedCents = effectiveCents.clamp(-200.0, 200.0);
+    final needleColor = colorScheme.primary;
     final hzDev = targetFreq * (pow(2, clampedCents / 1200) - 1);
 
     return Column(
@@ -121,8 +122,8 @@ class _FrequencyMeterState extends State<FrequencyMeter> {
               end: Alignment.bottomCenter,
               colors: [
                 needleColor,
-                colorScheme.onSurface.withValues(alpha: 0.6),
-                colorScheme.onSurface.withValues(alpha: 0.6),
+                colorScheme.primary.withValues(alpha: 0.6),
+                colorScheme.primary.withValues(alpha: 0.6),
               ],
             ),
             boxShadow: [
@@ -138,7 +139,7 @@ class _FrequencyMeterState extends State<FrequencyMeter> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
           decoration: BoxDecoration(
-            color: const Color(0xFFFFB4AB),
+            color: colorScheme.primary,
             borderRadius: BorderRadius.circular(4),
           ),
           child: Text(
@@ -146,8 +147,8 @@ class _FrequencyMeterState extends State<FrequencyMeter> {
                 ? '${clampedCents.abs().toStringAsFixed(0)}¢\n${hzDev >= 0 ? '+' : ''}${hzDev.toStringAsFixed(1)}Hz'
                 : '${clampedCents.abs().toStringAsFixed(0)}¢',
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Color(0xFF131313),
+            style: TextStyle(
+              color: colorScheme.onPrimary,
               fontSize: 10,
               fontWeight: FontWeight.w500,
               height: 1.2,
