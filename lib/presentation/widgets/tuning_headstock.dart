@@ -76,49 +76,54 @@ class _HeadstockPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
 
-    // Headstock outline path - thinner for dombyra
+    // Nut line — bottom of headstock, top of neck
+    final nutY = size.height * 0.85;
+
+    // Headstock outline path — covers full height
     final path = Path();
     path.moveTo(size.width * 0.4, size.height);
-    path.lineTo(size.width * 0.4, size.height * 0.833);
+    path.lineTo(size.width * 0.4, nutY);
+    path.lineTo(size.width * 0.4, size.height * 0.75);
     path.quadraticBezierTo(
       size.width * 0.4,
-      size.height * 0.8,
+      size.height * 0.72,
       size.width * 0.35,
-      size.height * 0.7,
+      size.height * 0.63,
     );
-    path.lineTo(size.width * 0.4, size.height * 0.2);
+    path.lineTo(size.width * 0.4, size.height * 0.18);
     path.quadraticBezierTo(
       size.width * 0.4,
-      size.height * 0.1,
+      size.height * 0.09,
       size.width * 0.5,
-      size.height * 0.133,
+      size.height * 0.12,
     );
     path.quadraticBezierTo(
       size.width * 0.6,
-      size.height * 0.1,
+      size.height * 0.09,
       size.width * 0.6,
-      size.height * 0.2,
+      size.height * 0.18,
     );
-    path.lineTo(size.width * 0.65, size.height * 0.7);
+    path.lineTo(size.width * 0.65, size.height * 0.63);
     path.quadraticBezierTo(
       size.width * 0.6,
-      size.height * 0.8,
+      size.height * 0.72,
       size.width * 0.6,
-      size.height * 0.833,
+      size.height * 0.75,
     );
+    path.lineTo(size.width * 0.6, nutY);
     path.lineTo(size.width * 0.6, size.height);
 
     canvas.drawPath(path, strokePaint);
 
-    // Horizontal lines inside headstock
+    // Nut lines
     canvas.drawLine(
-      Offset(size.width * 0.4, size.height * 0.9),
-      Offset(size.width * 0.6, size.height * 0.9),
+      Offset(size.width * 0.4, nutY),
+      Offset(size.width * 0.6, nutY),
       strokePaint,
     );
     canvas.drawLine(
-      Offset(size.width * 0.4, size.height * 0.933),
-      Offset(size.width * 0.6, size.height * 0.933),
+      Offset(size.width * 0.4, size.height * 0.88),
+      Offset(size.width * 0.6, size.height * 0.88),
       strokePaint,
     );
 
@@ -134,7 +139,7 @@ class _HeadstockPainter extends CustomPainter {
     // Draw string 0 (D)
     bool isLeftActive = activeStringIndex == 0;
     canvas.drawLine(
-      Offset(dNutX, size.height),
+      Offset(dNutX, nutY),
       Offset(dPegX, dPegY),
       isLeftActive ? activeStringPaint : stringPaint,
     );
@@ -145,7 +150,7 @@ class _HeadstockPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
       canvas.drawLine(
-        Offset(dNutX, size.height),
+        Offset(dNutX, nutY),
         Offset(dPegX, dPegY),
         glowPaint,
       );
@@ -154,7 +159,7 @@ class _HeadstockPainter extends CustomPainter {
     // Draw string 1 (G)
     bool isRightActive = activeStringIndex == 1;
     canvas.drawLine(
-      Offset(gNutX, size.height),
+      Offset(gNutX, nutY),
       Offset(gPegX, gPegY),
       isRightActive ? activeStringPaint : stringPaint,
     );
@@ -165,7 +170,7 @@ class _HeadstockPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
       canvas.drawLine(
-        Offset(gNutX, size.height),
+        Offset(gNutX, nutY),
         Offset(gPegX, gPegY),
         glowPaint,
       );
@@ -201,6 +206,15 @@ class _HeadstockPainter extends CustomPainter {
     if (noteNames.length > 1) {
       _drawPegShape(canvas, Offset(size.width * 0.8, gPegY), false, noteNames[1], textPainter, isActive: isRightActive);
     }
+
+    // Neck strings — 2 parallel vertical lines from nut to bottom
+    final neckPaint = Paint()
+      ..color = baseColor.withValues(alpha: 0.3)
+      ..strokeWidth = 1.5
+      ..style = PaintingStyle.stroke;
+
+    canvas.drawLine(Offset(dNutX, nutY), Offset(dNutX, size.height), neckPaint);
+    canvas.drawLine(Offset(gNutX, nutY), Offset(gNutX, size.height), neckPaint);
   }
 
   void _drawPegShape(Canvas canvas, Offset center, bool isLeft, String note, TextPainter textPainter, {bool isActive = false}) {
