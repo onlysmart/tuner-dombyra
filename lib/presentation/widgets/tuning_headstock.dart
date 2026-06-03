@@ -84,11 +84,19 @@ class _HeadstockPainter extends CustomPainter {
     path.moveTo(size.width * 0.4, size.height);
     path.lineTo(size.width * 0.4, nutY);
     path.lineTo(size.width * 0.4, size.height * 0.75);
+    // Inner curve from neck to flare
     path.quadraticBezierTo(
       size.width * 0.4,
       size.height * 0.72,
+      size.width * 0.36,
+      size.height * 0.64,
+    );
+    // Round the sharp bottom-left corner
+    path.quadraticBezierTo(
       size.width * 0.35,
       size.height * 0.63,
+      size.width * 0.355,
+      size.height * 0.585,
     );
     path.lineTo(size.width * 0.4, size.height * 0.18);
     path.quadraticBezierTo(
@@ -103,7 +111,16 @@ class _HeadstockPainter extends CustomPainter {
       size.width * 0.6,
       size.height * 0.18,
     );
-    path.lineTo(size.width * 0.65, size.height * 0.63);
+    // Line down to just above the corner
+    path.lineTo(size.width * 0.645, size.height * 0.585);
+    // Round the sharp bottom-right corner
+    path.quadraticBezierTo(
+      size.width * 0.65,
+      size.height * 0.63,
+      size.width * 0.64,
+      size.height * 0.64,
+    );
+    // Inner curve back to neck
     path.quadraticBezierTo(
       size.width * 0.6,
       size.height * 0.72,
@@ -129,12 +146,12 @@ class _HeadstockPainter extends CustomPainter {
 
     // String positions with vertical tilt
     // String 0 (D): lower peg, string 1 (G): higher peg
-    final dPegX = size.width * 0.35;
-    final dPegY = size.height * 0.35;
-    final dNutX = size.width * 0.44;
-    final gPegX = size.width * 0.65;
-    final gPegY = size.height * 0.55;
-    final gNutX = size.width * 0.56;
+    final dPegX = size.width * 0.45;
+    final dPegY = size.height * 0.4;
+    final dNutX = size.width * 0.45;
+    final gPegX = size.width * 0.55;
+    final gPegY = size.height * 0.6;
+    final gNutX = size.width * 0.55;
 
     // Draw string 0 (D)
     bool isLeftActive = activeStringIndex == 0;
