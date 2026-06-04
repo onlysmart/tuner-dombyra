@@ -206,8 +206,14 @@ class TunerProvider extends ChangeNotifier {
   }
 
   void _handleNoPitch() {
-    _inputState = AudioInputState.tooQuiet;
     _accuracy = PitchAccuracy.noInput;
+    if (!_audioService.isListening) {
+      _isListening = false;
+      _detectedFrequency = 0.0;
+      _targetFrequency = 0.0;
+      _centsDeviation = 0.0;
+    }
+    _inputState = AudioInputState.tooQuiet;
     _detectedStringIndex = -1;
     _stringLockCandidate = -1;
     _stringLockCount = 0;
@@ -218,6 +224,16 @@ class TunerProvider extends ChangeNotifier {
   void stopListening() {
     _audioService.stopListening();
     _isListening = false;
+    _accuracy = PitchAccuracy.noInput;
+    _inputState = AudioInputState.listening;
+    _detectedFrequency = 0.0;
+    _targetFrequency = 0.0;
+    _centsDeviation = 0.0;
+    _detectedStringIndex = -1;
+    _smoothedFrequency = 0.0;
+    _stringLockCandidate = -1;
+    _stringLockCount = 0;
+    _inTuneCount = 0;
     notifyListeners();
   }
 

@@ -41,4 +41,5 @@ class AppLocalizationsRu extends AppLocalizations {
   @override String get stringsDGCFAD => 'D G C F A D';
   @override String get hapticFeedback => 'Тактильный отклик';
   @override String get hapticFeedbackSubtitle => 'Вибрация при точной настройке';
+  @override String get enableMicrophone => 'Включите микрофон';
 }

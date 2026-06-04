@@ -41,4 +41,5 @@ class AppLocalizationsEn extends AppLocalizations {
   @override String get stringsDGCFAD => 'D G C F A D';
   @override String get hapticFeedback => 'Haptic Feedback';
   @override String get hapticFeedbackSubtitle => 'Vibrate when in tune';
+  @override String get enableMicrophone => 'Enable microphone';
 }

@@ -54,6 +54,7 @@ abstract class AppLocalizations {
   String get stringsDGCFAD;
   String get hapticFeedback;
   String get hapticFeedbackSubtitle;
+  String get enableMicrophone;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

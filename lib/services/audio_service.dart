@@ -71,35 +71,48 @@ class AudioService extends ChangeNotifier {
 
       final stream = await _recorder.startStream(config);
 
-      _streamSubscription = stream.listen((data) {
-        _pcmBuffer.addAll(data);
+      _streamSubscription = stream.listen(
+        (data) {
+          _pcmBuffer.addAll(data);
 
-        while (_pcmBuffer.length >= _bufferBytes) {
-          final chunk = _pcmBuffer.sublist(0, _bufferBytes);
-          _pcmBuffer.removeRange(0, _bufferBytes);
+          while (_pcmBuffer.length >= _bufferBytes) {
+            final chunk = _pcmBuffer.sublist(0, _bufferBytes);
+            _pcmBuffer.removeRange(0, _bufferBytes);
 
-          final samples = _bytesToSamples(chunk);
-          final rms = _calculateRMS(samples);
-          final db = rms > 0 ? 20 * log(rms / 32768.0) / ln10 : -96.0;
-          _lastAmplitude = db;
+            final samples = _bytesToSamples(chunk);
+            final rms = _calculateRMS(samples);
+            final db = rms > 0 ? 20 * log(rms / 32768.0) / ln10 : -96.0;
+            _lastAmplitude = db;
 
-          _chunkCount++;
-          if (_chunkCount % 10 == 0) {
-            onAmplitudeUpdate?.call(db);
-          }
+            _chunkCount++;
+            if (_chunkCount % 10 == 0) {
+              onAmplitudeUpdate?.call(db);
+            }
 
-          if (db > -50) {
-            final result = _detectPitchFromSamples(samples);
-            if (result != null) {
-              onPitchDetected(result.frequency, result.confidence);
+            if (db > -50) {
+              final result = _detectPitchFromSamples(samples);
+              if (result != null) {
+                onPitchDetected(result.frequency, result.confidence);
+              } else {
+                onNoPitch();
+              }
             } else {
               onNoPitch();
             }
-          } else {
-            onNoPitch();
           }
-        }
-      });
+        },
+        onError: (error) {
+          debugPrint('Audio stream error: $error');
+          _isListening = false;
+          notifyListeners();
+          onNoPitch();
+        },
+        onDone: () {
+          _isListening = false;
+          notifyListeners();
+          onNoPitch();
+        },
+      );
     } catch (e) {
       debugPrint('Error starting recording: $e');
       _isListening = false;
