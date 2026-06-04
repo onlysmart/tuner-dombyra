@@ -16,18 +16,48 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+  TunerProvider? _tuner;
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initTuner();
     });
   }
 
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _retryListening();
+    }
+  }
+
+  Future<void> _retryListening() async {
+    if (!mounted) return;
+    final tuner = _tuner;
+    if (tuner == null) return;
+    for (var i = 0; i < 3; i++) {
+      tuner.stopListening();
+      await Future.delayed(const Duration(milliseconds: 100));
+      await tuner.startListening();
+      await Future.delayed(Duration(milliseconds: 500 + i * 500));
+      if (tuner.isListening) return;
+    }
+  }
+
   void _initTuner() {
     final settings = context.read<SettingsProvider>().settings;
     final tuner = context.read<TunerProvider>();
+    _tuner = tuner;
 
     tuner.setReferencePitch(settings.referencePitch);
     tuner.setTuningMode(

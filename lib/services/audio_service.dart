@@ -56,18 +56,19 @@ class AudioService extends ChangeNotifier {
       }
     }
 
-    _isListening = true;
     _chunkCount = 0;
     notifyListeners();
 
     try {
+      try { await _recorder.stop(); } catch (_) {}
+      _pcmBuffer.clear();
+      _isListening = true;
+
       final config = RecordConfig(
         encoder: AudioEncoder.pcm16bits,
         sampleRate: _sampleRate,
         numChannels: 1,
       );
-
-      _pcmBuffer.clear();
 
       final stream = await _recorder.startStream(config);
 
@@ -103,13 +104,11 @@ class AudioService extends ChangeNotifier {
         },
         onError: (error) {
           debugPrint('Audio stream error: $error');
-          _isListening = false;
-          notifyListeners();
+          _cleanup();
           onNoPitch();
         },
         onDone: () {
-          _isListening = false;
-          notifyListeners();
+          _cleanup();
           onNoPitch();
         },
       );
@@ -188,12 +187,16 @@ class AudioService extends ChangeNotifier {
     return _recorder.getAmplitude();
   }
 
-  void stopListening() {
+  void _cleanup() {
     _isListening = false;
     _streamSubscription?.cancel();
     _streamSubscription = null;
-    _recorder.stop();
+    try { _recorder.stop(); } catch (_) {}
     notifyListeners();
+  }
+
+  void stopListening() {
+    _cleanup();
   }
 
   @override
