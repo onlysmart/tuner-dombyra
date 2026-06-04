@@ -45,22 +45,27 @@ class _HomeScreenState extends State<HomeScreen> {
     final tuner = context.watch<TunerProvider>();
 
     final hasInput = tuner.accuracy != PitchAccuracy.noInput;
+    final isMuted = !tuner.isListening;
+    final colorScheme = Theme.of(context).colorScheme;
 
     String instructionText;
     Color instructionColor;
 
-    if (!hasInput) {
+    if (isMuted) {
+      instructionText = l10n.enableMicrophone.toUpperCase();
+      instructionColor = colorScheme.primary;
+    } else if (!hasInput) {
       instructionText = l10n.playString.toUpperCase();
-      instructionColor = Theme.of(context).colorScheme.primary;
+      instructionColor = colorScheme.primary;
     } else if (tuner.accuracy == PitchAccuracy.inTune) {
       instructionText = l10n.inTune.toUpperCase();
       instructionColor = const Color(0xFF8CC63F);
     } else if (tuner.accuracy == PitchAccuracy.sharp) {
       instructionText = l10n.tooSharp.toUpperCase();
-      instructionColor = Theme.of(context).colorScheme.error;
+      instructionColor = colorScheme.error;
     } else {
       instructionText = l10n.tooFlat.toUpperCase();
-      instructionColor = Theme.of(context).colorScheme.primary;
+      instructionColor = colorScheme.primary;
     }
 
     final tuningMode = settings.tuningMode;
@@ -71,7 +76,10 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text(l10n.appName),
         actions: [
           IconButton(
-            icon: Icon(tuner.isListening ? Icons.mic : Icons.mic_off),
+            icon: Icon(
+              tuner.isListening ? Icons.mic : Icons.mic_off,
+              color: isMuted ? colorScheme.primary : null,
+            ),
             onPressed: () {
               if (tuner.isListening) {
                 tuner.stopListening();
@@ -96,9 +104,9 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, constraints) {
             final isLandscape = constraints.maxWidth > constraints.maxHeight;
             if (isLandscape) {
-              return _buildLandscapeLayout(l10n, settings, tuner, hasInput, instructionText, instructionColor, octaves);
+              return _buildLandscapeLayout(l10n, settings, tuner, hasInput, isMuted, instructionText, instructionColor, octaves);
             }
-            return _buildPortraitLayout(l10n, settings, tuner, hasInput, instructionText, instructionColor, octaves);
+            return _buildPortraitLayout(l10n, settings, tuner, hasInput, isMuted, instructionText, instructionColor, octaves);
           },
         ),
       ),
@@ -110,6 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
     AppSettings settings,
     TunerProvider tuner,
     bool hasInput,
+    bool isMuted,
     String instructionText,
     Color instructionColor,
     List<int> octaves,
@@ -135,6 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
             cents: tuner.centsDeviation,
             targetFrequency: tuner.targetFrequency,
             isActive: hasInput,
+            isMuted: isMuted,
           ),
         ),
         const SizedBox(height: 16),
@@ -148,6 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
           frequency: tuner.detectedFrequency,
           targetFrequency: tuner.targetFrequency,
           isActive: hasInput,
+          isMuted: isMuted,
         ),
         const Spacer(),
         SizedBox(
@@ -169,6 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
     AppSettings settings,
     TunerProvider tuner,
     bool hasInput,
+    bool isMuted,
     String instructionText,
     Color instructionColor,
     List<int> octaves,
@@ -197,6 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   cents: tuner.centsDeviation,
                   targetFrequency: tuner.targetFrequency,
                   isActive: hasInput,
+                  isMuted: isMuted,
                 ),
               ),
               const SizedBox(height: 12),
@@ -210,6 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 frequency: tuner.detectedFrequency,
                 targetFrequency: tuner.targetFrequency,
                 isActive: hasInput,
+                isMuted: isMuted,
               ),
               const Spacer(),
             ],

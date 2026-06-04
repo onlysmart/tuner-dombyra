@@ -5,12 +5,14 @@ class FrequencyMeter extends StatefulWidget {
   final double cents;
   final double? targetFrequency;
   final bool isActive;
+  final bool isMuted;
 
   const FrequencyMeter({
     super.key,
     required this.cents,
     this.targetFrequency,
     this.isActive = false,
+    this.isMuted = false,
   });
 
   @override
@@ -33,7 +35,11 @@ class _FrequencyMeterState extends State<FrequencyMeter> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final meterColor = colorScheme.onSurface.withValues(alpha: 0.4);
+    final isMuted = widget.isMuted;
+
+    final meterColor = isMuted
+        ? colorScheme.onSurface.withValues(alpha: 0.08)
+        : colorScheme.onSurface.withValues(alpha: 0.4);
 
     final targetFreq = widget.targetFrequency ?? 440.0;
     final showHz = widget.targetFrequency != null && widget.targetFrequency! > 0;
@@ -98,16 +104,16 @@ class _FrequencyMeterState extends State<FrequencyMeter> {
               (effectiveCents.clamp(-200.0, 200.0) / 200.0),
               -1.0,
             ),
-            child: _buildNeedle(colorScheme, targetFreq, showHz, effectiveCents),
+            child: _buildNeedle(colorScheme, targetFreq, showHz, effectiveCents, isMuted),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildNeedle(ColorScheme colorScheme, double targetFreq, bool showHz, double effectiveCents) {
+  Widget _buildNeedle(ColorScheme colorScheme, double targetFreq, bool showHz, double effectiveCents, bool isMuted) {
     final clampedCents = effectiveCents.clamp(-200.0, 200.0);
-    final needleColor = colorScheme.primary;
+    final needleColor = isMuted ? colorScheme.onSurface.withValues(alpha: 0.3) : colorScheme.primary;
     final hzDev = targetFreq * (pow(2, clampedCents / 1200) - 1);
 
     return Column(
@@ -120,26 +126,34 @@ class _FrequencyMeterState extends State<FrequencyMeter> {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [
-                needleColor,
-                colorScheme.primary.withValues(alpha: 0.6),
-                colorScheme.primary.withValues(alpha: 0.6),
-              ],
+              colors: isMuted
+                  ? [
+                      colorScheme.onSurface.withValues(alpha: 0.2),
+                      colorScheme.onSurface.withValues(alpha: 0.1),
+                      colorScheme.onSurface.withValues(alpha: 0.1),
+                    ]
+                  : [
+                      needleColor,
+                      colorScheme.primary.withValues(alpha: 0.6),
+                      colorScheme.primary.withValues(alpha: 0.6),
+                    ],
             ),
-            boxShadow: [
-              BoxShadow(
-                color: needleColor.withValues(alpha: 0.8),
-                blurRadius: 10,
-                spreadRadius: 2,
-              ),
-            ],
+            boxShadow: isMuted
+                ? null
+                : [
+                    BoxShadow(
+                      color: needleColor.withValues(alpha: 0.8),
+                      blurRadius: 10,
+                      spreadRadius: 2,
+                    ),
+                  ],
           ),
         ),
         const SizedBox(height: 4),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
           decoration: BoxDecoration(
-            color: colorScheme.primary,
+            color: isMuted ? colorScheme.onSurface.withValues(alpha: 0.15) : colorScheme.primary,
             borderRadius: BorderRadius.circular(4),
           ),
           child: Text(
@@ -148,7 +162,7 @@ class _FrequencyMeterState extends State<FrequencyMeter> {
                 : '${clampedCents.abs().toStringAsFixed(0)}¢',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: colorScheme.onPrimary,
+              color: isMuted ? colorScheme.onSurface.withValues(alpha: 0.3) : colorScheme.onPrimary,
               fontSize: 10,
               fontWeight: FontWeight.w500,
               height: 1.2,

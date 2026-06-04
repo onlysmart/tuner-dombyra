@@ -6,6 +6,7 @@ class NoteDisplay extends StatelessWidget {
   final double frequency;
   final double targetFrequency;
   final bool isActive;
+  final bool isMuted;
 
   const NoteDisplay({
     super.key,
@@ -14,11 +15,15 @@ class NoteDisplay extends StatelessWidget {
     required this.frequency,
     required this.targetFrequency,
     this.isActive = false,
+    this.isMuted = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final activeColor = isMuted
+        ? colorScheme.onSurface.withValues(alpha: 0.38)
+        : colorScheme.primary;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -74,7 +79,7 @@ class NoteDisplay extends StatelessWidget {
                 : Text(
                     noteName,
                     style: TextStyle(
-                      color: colorScheme.primary,
+                      color: activeColor,
                       fontSize: 22,
                       fontWeight: FontWeight.w600,
                       height: 1.0,
@@ -89,9 +94,11 @@ class NoteDisplay extends StatelessWidget {
             child: Text(
               '${(isActive ? frequency : 0.0).toStringAsFixed(2)} Hz',
               style: TextStyle(
-                color: isActive && frequency > 0
-                    ? colorScheme.primary
-                    : colorScheme.onSurfaceVariant,
+                color: isMuted
+                    ? colorScheme.onSurface.withValues(alpha: 0.38)
+                    : (isActive && frequency > 0
+                        ? colorScheme.primary
+                        : colorScheme.onSurfaceVariant),
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 1.0,
