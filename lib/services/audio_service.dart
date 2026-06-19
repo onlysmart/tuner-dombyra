@@ -145,14 +145,31 @@ class AudioService extends ChangeNotifier {
     return _autocorrelationPitch(samples, _sampleRate);
   }
 
-  _PitchResult? _autocorrelationPitch(List<double> samples, int sampleRate) {
-    final n = samples.length;
-    if (n < 256) return null;
+  _PitchResult? _autocorrelationPitch(List<double> rawSamples, int sampleRate) {
+    final n = rawSamples.length;
+    if (n < 512) return null;
 
-    final minLag = (sampleRate / 400).ceil();
-    final maxLag = (sampleRate / 60).floor();
+    // DC removal
+    var mean = 0.0;
+    for (var i = 0; i < n; i++) {
+      mean += rawSamples[i];
+    }
+    mean /= n;
+
+    // Hann window
+    final samples = <double>[];
+    for (var i = 0; i < n; i++) {
+      var s = rawSamples[i] - mean;
+      final w = 0.5 * (1 - cos(2 * pi * i / (n - 1)));
+      s *= w;
+      samples.add(s);
+    }
+
+    final minLag = (sampleRate / 420).ceil();
+    final maxLag = (sampleRate / 55).floor();
     if (maxLag >= n || maxLag <= minLag) return null;
 
+    final correlations = <double>[];
     var bestCorrelation = -1.0;
     var bestLag = minLag;
 
@@ -167,18 +184,48 @@ class AudioService extends ChangeNotifier {
         normA += a * a;
         normB += b * b;
       }
-      final denominator = sqrt(normA * normB).toDouble();
+      final denominator = sqrt(normA * normB);
       final correlation = denominator > 0 ? sum / denominator : 0.0;
+      correlations.add(correlation);
       if (correlation > bestCorrelation) {
         bestCorrelation = correlation;
         bestLag = lag;
       }
     }
 
-    if (bestCorrelation < 0.3) return null;
+    if (bestCorrelation < 0.55) return null;
 
-    final frequency = sampleRate.toDouble() / bestLag;
-    if (frequency < 60 || frequency > 400) return null;
+    // Harmonic rejection: prefer longer lag (fundamental)
+    for (var mult = 2; mult <= 4; mult++) {
+      final fundamentalLag = bestLag * mult;
+      if (fundamentalLag < maxLag) {
+        final fundIdx = fundamentalLag - minLag;
+        if (fundIdx < correlations.length &&
+            correlations[fundIdx] > bestCorrelation * 0.82) {
+          bestCorrelation = correlations[fundIdx];
+          bestLag = fundamentalLag;
+        }
+      }
+    }
+
+    // Quadratic interpolation
+    double frequency;
+    if (bestLag > minLag && bestLag < maxLag - 1) {
+      final c0 = correlations[bestLag - 1 - minLag];
+      final c1 = bestCorrelation;
+      final c2 = correlations[bestLag + 1 - minLag];
+      final denom = c0 - 2 * c1 + c2;
+      if (denom.abs() > 1e-10) {
+        final delta = 0.5 * (c0 - c2) / denom;
+        frequency = sampleRate.toDouble() / (bestLag + delta);
+      } else {
+        frequency = sampleRate.toDouble() / bestLag;
+      }
+    } else {
+      frequency = sampleRate.toDouble() / bestLag;
+    }
+
+    if (frequency < 55 || frequency > 420) return null;
 
     return _PitchResult(frequency, bestCorrelation.clamp(0.0, 1.0));
   }

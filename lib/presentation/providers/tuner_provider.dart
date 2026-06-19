@@ -123,11 +123,24 @@ class TunerProvider extends ChangeNotifier {
       _computeTargets();
     }
 
-    const smoothingAlpha = 0.4;
+    const smoothingAlpha = 0.12;
+    const outlierAlpha = 0.05;
+    const outlierThreshold = 2.0;
+    const resetThreshold = 10.0;
+
     if (_smoothedFrequency == 0.0) {
       _smoothedFrequency = frequency;
     } else {
-      _smoothedFrequency = smoothingAlpha * frequency + (1 - smoothingAlpha) * _smoothedFrequency;
+      final diff = (frequency - _smoothedFrequency).abs();
+      if (diff > resetThreshold) {
+        _smoothedFrequency = _smoothedFrequency * 0.9 + frequency * 0.1;
+      } else if (diff > outlierThreshold) {
+        _smoothedFrequency = _smoothedFrequency +
+            outlierAlpha * (frequency - _smoothedFrequency);
+      } else {
+        _smoothedFrequency = _smoothedFrequency +
+            smoothingAlpha * (frequency - _smoothedFrequency);
+      }
     }
 
     int nearestIndex = 0;
